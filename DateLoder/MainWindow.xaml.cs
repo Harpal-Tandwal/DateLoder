@@ -16,29 +16,69 @@ namespace DateLoder
     public partial class MainWindow : Window
     {
        public  DataModel dataModel;
-        
+        string filepath_prog_name = @"C:\Parser\ProgramName.txt";
+        string filepath_operation_type = @"C:\Parser\OperationType.txt";
+        string filepath_equipment = @"C:\Parser\Equipment.txt";
         public MainWindow()
         {
             DataContext = this;
             dataModel = new DataModel();
             InitializeComponent();
-        
-       }
-       
+            CbInitializer();
 
+            page_congif.Visibility = Visibility.Collapsed;
+            page_data_loading.Visibility = Visibility.Collapsed;    
+
+        }
        
-        private async void btn_send_Click(object sender, RoutedEventArgs e)
+        public void CbInitializer()
+        {
+
+            //loading program names 
+            if (File.Exists(filepath_prog_name))
+            {
+                string[] lines = File.ReadAllLines(filepath_prog_name);
+                 foreach(string line in lines)
+                {
+                    cb_prog_name.Items.Add(line);
+                }
+            }
+            else { MessageBox.Show("Program  data file not found", "A FILE MISSING"); }
+            
+            //loading operation types
+            if (File.Exists(filepath_operation_type))
+            {
+                string[] lines = File.ReadAllLines(filepath_operation_type);
+                foreach (string line in lines)
+                {
+                    cb_operation_type.Items.Add(line);
+                }
+            }
+            else { MessageBox.Show(" Operation data file not found", "A FILE MISSING"); }
+
+
+            //loading equipment types
+            if (File.Exists(filepath_equipment))
+            {
+                string[] lines = File.ReadAllLines(filepath_equipment);
+                foreach (string line in lines)
+                {
+                    cb_equipment.Items.Add(line);
+                }
+            }
+            else { MessageBox.Show("program file not found", "A FILE MISSING"); }
+
+
+
+
+        }
+        
+       
+        private async void dataSender()
         {
             // add listitems into barcode collections
-            foreach (var item in lv_entries.Items)
-            {
-                dataModel.barcodes.Add(item.ToString());
-            }
-
-
-
-
-            XmlSerializer serializer= new XmlSerializer(typeof(DataModel));
+           
+             XmlSerializer serializer= new XmlSerializer(typeof(DataModel));
              StringWriter stringWriter = new StringWriter();
              serializer.Serialize(stringWriter, dataModel);
              string data = stringWriter.ToString();
@@ -46,7 +86,7 @@ namespace DateLoder
           using (HttpClient client = new HttpClient())
             {
                 string url = "enter destination url";
-                MessageBox.Show($"data send succesfully:- {data} ");
+                MessageBox.Show($"{data} ", "Data Send Succesfully");
 
                 HttpContent content =  new StringContent(data, Encoding.UTF8, "application/xml"); 
                 try
@@ -54,11 +94,11 @@ namespace DateLoder
                     HttpResponseMessage res = await client.PostAsync(url, content);
                     if (res.IsSuccessStatusCode)
                     {
-                        MessageBox.Show($"data send succesfully:- {data} ");
+                        MessageBox.Show($"{data} ", "Data Send Succesfully");
                     }
                     else
                     {
-                        MessageBox.Show( "Response from server \n " + res.StatusCode.ToString());
+                        MessageBox.Show( res.StatusCode.ToString() , "Response From Server");
                     }
 
                 }
@@ -68,32 +108,59 @@ namespace DateLoder
          }
 
 
-        private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void btn_save_Click(object sender, RoutedEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Enter)
-            {
-               
+            dataModel.prog_name = cb_prog_name.Text;
+            dataModel.operation_type= cb_operation_type.Text;
+            dataModel.equipment= cb_equipment.Text;
+            dataModel.work_order= tb_work_order.Text;
 
-                lv_entries.Items.Add(tb_entry.Text);
-               
-                tb_entry.Clear();
+            MessageBox.Show($" \n program name : {dataModel.prog_name}\n workorder :{ dataModel.work_order}  \n equipment : {dataModel.equipment}\n operation : {dataModel.operation_type} ", "Configuraion Saved !!");
+            
+
+        }
+
+
+        private void btn_proceed_Click(object sender, RoutedEventArgs e)
+        {
+            if(dataModel.prog_name!=null && dataModel.operation_type!=null && dataModel.equipment!=null && dataModel.work_order != null)
+            {
+                page_congif.Visibility = Visibility.Collapsed;
+                page_data_loading.Visibility = Visibility.Visible;
+
+
+            }
+            else
+            {
+                MessageBox.Show(" Please fill all Config Details. ", " Incomplete details");
+            }
+         
+      
+        }
+
+        private void tb_barcode_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == System.Windows.Input.Key.Enter)
+            {
+                dataSender();
             }
         }
-        private void btn_add_Click(object sender, RoutedEventArgs e)
+
+        private void login_Click(object sender, RoutedEventArgs e)
         {
+            if(tb_password.Text=="1234" && tb_user_name.Text=="OP1" || tb_password.Text == "admin" && tb_user_name.Text == "admin")
+            {
+                page_authenticate.Visibility = Visibility.Collapsed;
+                page_congif.Visibility= Visibility.Visible;
 
-
-
-            lv_entries.Items.Add(tb_entry.Text);
-            
-            tb_entry.Clear();
-
+            }
+            else { MessageBox.Show("Wrong Credentials", "Authentiction Failed !!"); tb_user_name.Clear() ; tb_password.Clear(); }
         }
 
-        private void btn_delete_Click(object sender, RoutedEventArgs e)
+        private void btn_reset_config_Click(object sender, RoutedEventArgs e)
         {
-      
-
+           page_data_loading.Visibility = Visibility.Collapsed;
+            page_congif.Visibility = Visibility.Visible;
         }
     }
 }

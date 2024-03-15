@@ -7,14 +7,14 @@ namespace DateLoder
      public class DataModel
     {
 
-        public string? name { get; set; } = "TURN";
-        public string? SerialNumber { get; set; } = "Z101123456789";
+        public string? prog_name { get; set; } 
+        public string? operation_type { get; set; } 
 
-        public ObservableCollection<string> barcodes { get; set; }
-         public DataModel()
-        {
-            barcodes = new ObservableCollection<string>();  
-        }
+        public string equipment {  get; set; }  
+        public string work_order {  get; set; }
+        public string cycle_time { get; set; } = "5";
+        public string start_time { get; set; } = DateTime.Now.ToString();
 
+       
     }
 }
