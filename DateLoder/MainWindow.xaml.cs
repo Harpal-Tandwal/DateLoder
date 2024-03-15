@@ -114,7 +114,7 @@ namespace DateLoder
         {
 
 
-            if (cb_prog_name.Text != null && cb_operation_type.Text != null && cb_equipment != null && tb_work_order.Text!= null)
+            if (cb_prog_name.Text != null && cb_operation_type.Text != null && cb_equipment != null && tb_work_order.Text != "")
             {
                 dataModel.prog_name = cb_prog_name.Text;
                 dataModel.operation_type = cb_operation_type.Text;
@@ -142,7 +142,7 @@ namespace DateLoder
             {
                 page_config.Visibility = Visibility.Collapsed;
                 page_data_loading.Visibility = Visibility.Visible;
-
+                tb_barcode.Focus();
 
             }
             else
