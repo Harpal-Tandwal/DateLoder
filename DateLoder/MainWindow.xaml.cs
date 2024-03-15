@@ -8,6 +8,7 @@ using System;
 using System.ComponentModel;
 using static DateLoder.MainWindow;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 
 namespace DateLoder
@@ -19,6 +20,7 @@ namespace DateLoder
         string filepath_prog_name = @"C:\Parser\ProgramName.txt";
         string filepath_operation_type = @"C:\Parser\OperationType.txt";
         string filepath_equipment = @"C:\Parser\Equipment.txt";
+        bool  config_done = false;
         public MainWindow()
         {
             DataContext = this;
@@ -26,7 +28,7 @@ namespace DateLoder
             InitializeComponent();
             CbInitializer();
 
-            page_congif.Visibility = Visibility.Collapsed;
+            page_config.Visibility = Visibility.Collapsed;
             page_data_loading.Visibility = Visibility.Collapsed;    
 
         }
@@ -110,29 +112,42 @@ namespace DateLoder
 
         private void btn_save_Click(object sender, RoutedEventArgs e)
         {
-            dataModel.prog_name = cb_prog_name.Text;
-            dataModel.operation_type= cb_operation_type.Text;
-            dataModel.equipment= cb_equipment.Text;
-            dataModel.work_order= tb_work_order.Text;
 
-            MessageBox.Show($" \n program name : {dataModel.prog_name}\n workorder :{ dataModel.work_order}  \n equipment : {dataModel.equipment}\n operation : {dataModel.operation_type} ", "Configuraion Saved !!");
-            
+
+            if (cb_prog_name.Text != null && cb_operation_type.Text != null && cb_equipment != null && tb_work_order.Text!= null)
+            {
+                dataModel.prog_name = cb_prog_name.Text;
+                dataModel.operation_type = cb_operation_type.Text;
+                dataModel.equipment = cb_equipment.Text;
+                dataModel.work_order = tb_work_order.Text;
+
+                MessageBox.Show($" \n program name : {dataModel.prog_name}\n workorder :{dataModel.work_order}  \n equipment : {dataModel.equipment}\n operation : {dataModel.operation_type} ", "Configuraion Saved !!");
+               
+                SolidColorBrush green = new SolidColorBrush(Colors.Green);
+                btn_proceed.Background = green;
+                btn_proceed.IsEnabled  = true;
+                config_done = true;
+            }
+            else
+            {
+                MessageBox.Show(" Please fill all Config Details. ", " Incomplete details");
+            }
 
         }
 
 
         private void btn_proceed_Click(object sender, RoutedEventArgs e)
         {
-            if(dataModel.prog_name!=null && dataModel.operation_type!=null && dataModel.equipment!=null && dataModel.work_order != null)
+            if(config_done)
             {
-                page_congif.Visibility = Visibility.Collapsed;
+                page_config.Visibility = Visibility.Collapsed;
                 page_data_loading.Visibility = Visibility.Visible;
 
 
             }
             else
             {
-                MessageBox.Show(" Please fill all Config Details. ", " Incomplete details");
+                MessageBox.Show("Can Not Proceed ", "Configuration not Saved");
             }
          
       
@@ -143,6 +158,7 @@ namespace DateLoder
             if(e.Key == System.Windows.Input.Key.Enter)
             {
                 dataSender();
+                tb_barcode.Clear();
             }
         }
 
@@ -151,7 +167,7 @@ namespace DateLoder
             if(tb_password.Text=="1234" && tb_user_name.Text=="OP1" || tb_password.Text == "admin" && tb_user_name.Text == "admin")
             {
                 page_authenticate.Visibility = Visibility.Collapsed;
-                page_congif.Visibility= Visibility.Visible;
+                ShowPageConfog();
 
             }
             else { MessageBox.Show("Wrong Credentials", "Authentiction Failed !!"); tb_user_name.Clear() ; tb_password.Clear(); }
@@ -159,8 +175,26 @@ namespace DateLoder
 
         private void btn_reset_config_Click(object sender, RoutedEventArgs e)
         {
-           page_data_loading.Visibility = Visibility.Collapsed;
-            page_congif.Visibility = Visibility.Visible;
+            tb_barcode.Clear();
+            ShowPageConfog();
+        }
+
+        void ShowPageConfog()
+        {
+            page_authenticate.Visibility = Visibility.Collapsed;
+            page_data_loading.Visibility= Visibility.Collapsed;
+
+            page_config.Visibility = Visibility.Visible;
+            btn_proceed.IsEnabled = false;
+            tb_work_order.Clear();
+            cb_equipment.Text  = null;
+            cb_operation_type.Text = null;
+            cb_prog_name.Text =null;
+
+            config_done = false;
+
         }
     }
+
+ 
 }

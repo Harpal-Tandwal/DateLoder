@@ -99,7 +99,7 @@
  **************************************************************************-->
 
 
-        <Grid  Name="page_congif"  Background="CadetBlue">
+        <Grid  Name="page_config"  Background="CadetBlue">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="2*"/>
