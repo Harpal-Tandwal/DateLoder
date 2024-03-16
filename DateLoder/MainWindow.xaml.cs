@@ -26,10 +26,10 @@ namespace DateLoder
             DataContext = this;
             dataModel = new DataModel();
             InitializeComponent();
-            CbInitializer();
+            CbInitializer();                // loading items to prog name ,opertion type, equipments from their respective  files
 
             page_config.Visibility = Visibility.Collapsed;
-            page_data_loading.Visibility = Visibility.Collapsed;    
+            page_data_loading.Visibility = Visibility.Collapsed;
 
         }
        
@@ -78,10 +78,10 @@ namespace DateLoder
        
         private async void dataSender()
         {
-            // add listitems into barcode collections
            
-             XmlSerializer serializer= new XmlSerializer(typeof(DataModel));
-             StringWriter stringWriter = new StringWriter();
+           
+             XmlSerializer serializer= new XmlSerializer(typeof(DataModel));    // XML blueprint creation
+             StringWriter stringWriter = new StringWriter();                  
              serializer.Serialize(stringWriter, dataModel);
              string data = stringWriter.ToString();
 

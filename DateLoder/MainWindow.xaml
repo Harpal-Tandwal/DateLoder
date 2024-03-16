@@ -78,14 +78,19 @@
 
     <Grid>
 
+<!--**************************************************************************     
+*********************** PAGE 1 ********************************************
+**************************************************************************-->
+
+
         <Grid Name="page_authenticate">
             <Border BorderBrush="green"  >
             <StackPanel Width="400" Height="250">
-                <Label Content="User Name "/>
-                <TextBox Name="tb_user_name"/>
+                <Label Content="User Name " />
+                    <TextBox Name="tb_user_name" HorizontalContentAlignment="Center"/>
 
-                <Label Content="Enter Password "/>
-                <TextBox Name="tb_password"/>
+                <Label Content="Enter Password " />
+                    <TextBox Name="tb_password" HorizontalContentAlignment="Center"/>
 
                 <Button Name="login" Content="Login" Style="{StaticResource btn_normal}" Click="login_Click"/>
 
@@ -170,7 +175,7 @@
                 <Label Content=" Scane the barode"/>
                 <TextBox Name="tb_barcode" Height="35"  Width="400" FontSize="16" VerticalAlignment="Top" HorizontalAlignment="Center"  Background="Tan" Foreground="Blue" KeyDown="tb_barcode_KeyDown"/>
             </StackPanel>
-            <Button Name="btn_reset_config" Content="Change Configurations" Width="500" Height="45" VerticalAlignment="Bottom" Style="{StaticResource btn_normal}" Click="btn_reset_config_Click" />
+            <Button Name="btn_reset_config" Content="Reset Configurations" Width="500" Height="45" VerticalAlignment="Bottom" Style="{StaticResource btn_normal}" Click="btn_reset_config_Click" />
 
         </Grid>
     </Grid>
